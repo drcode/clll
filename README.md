@@ -49,7 +49,7 @@ Now you can write an LLL contract right in your Clojure source file:
 The contract is just a regular clojure functions with some parameters:
 
 * The storage map
-* Tthe transaction
+* The transaction
 * A list of return values for external contract calls (external contract calls are only simulated at this time) 
 * An optional timestamp. 
 
