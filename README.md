@@ -53,10 +53,10 @@ The contract is just a regular clojure function with some parameters:
 * An optional list of return values for external contract calls (external contract calls are only simulated at this time) 
 * An optional timestamp. 
 
-Therefore, you can just call the contract with those values:
+Therefore, you can just call the contract with those values: (We're starting with empty storage and a transaction that specifies the caller as "Bob")
 
 ```Clojure
-> (def initalized-contract (key-value-publisher {} {:caller "Bob"}))
+> (key-value-publisher {} {:caller "Bob"})
 {:storage {69 Bob}, :result #<eval$contract_eval$fun__40 clll.eval$contract_eval$fun__40@464b6>}
 ```
 
