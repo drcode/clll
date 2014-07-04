@@ -83,5 +83,6 @@ The file test/clll/clll-tests.clj contains comprehensive-ish test cases for Gavi
 
 ## License
 
-Distributed under the Eclipse Public License either version 1.0 or (at
-your option) any later version.
+Copyright © 2014 Conrad Barski
+
+Distributed under the Eclipse Public License, the same as Clojure.
