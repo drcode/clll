@@ -46,7 +46,14 @@ Now you can write an LLL contract right in your Clojure source file:
 
 ### Executing a Contract
 
-The contract is just a regular clojure functions with three parameters: The storage, the transaction, a list of return values for external contract calls (external contract calls are only simulated at this time) and an optional timestamp. Therefore, just call it as follows, to create a new key-value publisher for Bob:
+The contract is just a regular clojure functions with some parameters:
+
+    * The storage map
+    * Tthe transaction
+    * A list of return values for external contract calls (external contract calls are only simulated at this time) 
+    * An optional timestamp. 
+
+Therefore, you can just call the contract with those values:
 
 ```Clojure
 > (def initalized-contract (key-value-publisher {} {:caller "Bob"}))
