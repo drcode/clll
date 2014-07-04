@@ -34,7 +34,7 @@ Then require the necessary libraries in your header file:
 
 Now you can write an LLL contract right in your Clojure source file:
 
-```
+```Clojure
 (defcontract key-value-publisher
              [[69]] (caller)
              (return 0 (lll
