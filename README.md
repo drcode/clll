@@ -63,11 +63,11 @@ Therefore, you can just call the contract with those values: (We're starting wit
 Note that this initial call is the initialization for the contract. The "real" contract has now been returned as a result, which can again be called:
 
 ```Clojure
-> (let [initialized-contract (key-value-publisher {} {:caller "Bob"})
-                     {:keys [result storage]} initialized-contract]
-                    (result storage 
-                            {:caller "Bob"
-                             :data ["favorite-color" "green"]}))
+> (let [initialized-contract     (key-value-publisher {} {:caller "Bob"})
+        {:keys [result storage]} initialized-contract]
+      (result storage 
+              {:caller "Bob"
+               :data   ["favorite-color" "green"]}))
 {:storage {"favorite-color" "green", 69 Bob}, :result nil}
 ```
 
