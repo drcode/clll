@@ -46,7 +46,7 @@ Now you can write an LLL contract right in your Clojure source file:
 
 ### Executing a Contract
 
-The contract is just a regular clojure functions with some parameters:
+The contract is just a regular clojure function with some parameters:
 
 * The storage map
 * The transaction
