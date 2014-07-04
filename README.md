@@ -23,7 +23,7 @@ To use this library, put the following dependency in your project.clj file:
 [clll "0.1.0-SNAPSHOT"]
 ```
 
-Then require the necessary libraries in your header file:
+Then require the necessary libraries in your namespace declaration:
 
 ```Clojure
 (ns foo.core
