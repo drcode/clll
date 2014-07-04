@@ -50,7 +50,7 @@ The contract is just a regular clojure function with some parameters:
 
 * The storage map
 * The transaction
-* A list of return values for external contract calls (external contract calls are only simulated at this time) 
+* An optional list of return values for external contract calls (external contract calls are only simulated at this time) 
 * An optional timestamp. 
 
 Therefore, you can just call the contract with those values:
