@@ -9,13 +9,13 @@ With this library, you can create and run LLL code directly in Clojure.
 *Warning* This code is still pre-alpha: It can pass the cpp-ethereum POC5 example contracts, but can do little else. It is still incomplete and is missing functions. Also, it still has known incorrect behavior (for use cases beyond current unit tests)
 
 The CLLL dialect is exactly the same as the LLL language, except for the following:
-    1. The curly braces {...} need to be replaced by (do ...) to make the Clojure reader happy.
-    2. The optional colon in LLL is not allowed
+1. The curly braces {...} need to be replaced by (do ...) to make the Clojure reader happy.
+2. The optional colon in LLL is not allowed
 
 To use this library, put the following dependency in your project.clj file:
 
 ```Clojure
-        [clll "0.1.0-SNAPSHOT"]
+[clll "0.1.0-SNAPSHOT"]
 ```
 
 Then require the necessary libraries in your header file:
