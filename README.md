@@ -8,9 +8,14 @@ With this library, you can create and run LLL code directly in Clojure.
 
 *Warning* This code is still pre-alpha: It can pass the cpp-ethereum POC5 example contracts, but can do little else. It is still incomplete and is missing functions. Also, it still has known incorrect behavior (for use cases beyond current unit tests)
 
+### Differences between CLLL and LLL
+
 The CLLL dialect is exactly the same as the LLL language, except for the following:
+
 1. The curly braces {...} need to be replaced by (do ...) to make the Clojure reader happy.
 2. The optional colon in LLL is not allowed
+
+### Defining a Contract
 
 To use this library, put the following dependency in your project.clj file:
 
@@ -39,6 +44,8 @@ Now you can write an LLL contract right in your Clojure source file:
                         0)))
 ```
 
+### Executing a Contract
+
 The contract is just a regular clojure functions with three parameters: The storage, the transaction, a list of return values for external contract calls (external contract calls are only simulated at this time) and an optional timestamp. Therefore, just call it as follows, to create a new key-value publisher for Bob:
 
 ```Clojure
@@ -46,7 +53,7 @@ The contract is just a regular clojure functions with three parameters: The stor
 {:storage {69 Bob}, :result #<eval$contract_eval$fun__40 clll.eval$contract_eval$fun__40@464b6>}
 ```
 
-Note that this initial call is the initialization for the contract. The "real" contract has now been returned as a result, which can egain be called:
+Note that this initial call is the initialization for the contract. The "real" contract has now been returned as a result, which can again be called:
 
 ```Clojure
 > (let [initialized-contract (key-value-publisher {} {:caller "Bob"})
@@ -59,12 +66,13 @@ Note that this initial call is the initialization for the contract. The "real" c
 
 As expected, the contract has added Bob's favorite color into storage.
 
-## Examples/Test Cases
+### Examples
 
 The file src/clll-examples/core.clj contains all of Gavin Wood's current POC5 examples.
 
-The file test/clll/clll-tests.clj contains comprehensive test cases for Gavin's examples. You can verify that the tests pass by cloning this git repo and running "lein test" from the command line.
+### Unit Tests
 
+The file test/clll/clll-tests.clj contains comprehensive-ish test cases for Gavin's examples. You can verify that the tests pass by cloning this git repo and running "lein test" from the command line.
 
 ## License
 
