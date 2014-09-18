@@ -57,7 +57,7 @@
               [0] "Bank"
               (call (- (gas) 100) "name-registrar" 0 0 4 0 0)
 
-              (return 0 (lll (do
+              o(return 0 (lll (do
                               (if (>= @@(caller) (calldataload 0))
                                   ;; Withdrawal:
                                   (do
@@ -110,22 +110,24 @@
               ))
 
 (defcontract time-vault
-    ;; Register with the NameReg contract.
-    [0] "TimeVault"
-    (call (- (gas) 100) "name-registrar" 0 0 9 0 0)
+             ;; Register with the NameReg contract.
+             [0] "TimeVault"
+             (call (- (gas) 100) "name-registrar" 0 0 9 0 0)
 
-    ;; Register the owner of the money in the contract
-    [[owner]] (caller)
-    ;; Initialize the waiting period to 3600 seconds (60 minutes)
-    [[waiting_period]] 3600
+             ;; Register the owner of the money in the contract
+             [[owner]] (caller)
+             ;; Initialize the waiting period to 3600 seconds (60 minutes)
+             [[waiting_period]] 3600
 
-    (return 0 (lll
-               ;; Owner starts a withdrawal authorisation
-               (if (and (= (caller) @@owner) (= (calldataload 0) "withdrawal"))
-                   [[withdrawal_start]] (timestamp)
-                   ;; Else, when owner finalises withdrawal after waiting period and time has elapsed
-                   (when (and (= (caller) @@owner) (= (calldataload 0) "finalize")
-                              (< (+ @@withdrawal_start @@waiting_period) (timestamp)))
-                   ;; Send money to sender
-                         (suicide @@owner)))
-               0)))
+             (return 0 (lll
+                        ;; Owner starts a withdrawal authorisation
+                        (if (and (= (caller) @@owner) (= (calldataload 0) "withdrawal"))
+                            [[withdrawal_start]] (timestamp)
+                            ;; Else, when owner finalises withdrawal after waiting period and time has elapsed
+                            (when (and (= (caller) @@owner) (= (calldataload 0) "finalize")
+                                       (< (+ @@withdrawal_start @@waiting_period) (timestamp)))
+                                  ;; Send money to sender
+                                  (suicide @@owner)))
+                        0)))
+
+
