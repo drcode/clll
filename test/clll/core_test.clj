@@ -2,27 +2,15 @@
   (:require [clojure.test :refer :all]
             [clll.core :refer :all]
             [clll.functions :refer :all]
+            [clll.test-utilities :refer :all]
             [clll-examples.core :refer :all]))
-
-(defn test-init [contract caller]
-      (dissoc (contract {} {:caller caller}) :result))
-
-(defn test-transaction
-      ([contract caller message storage-override timestamps]
-         (let [{:keys [storage result]} (contract {} {:caller caller})]
-              (result storage-override message timestamps)))
-      ([contract caller message storage-override]
-         (let [{:keys [storage result]} (contract {} {:caller caller})]
-              (result storage-override message)))
-      ([contract caller message]
-         (let [{:keys [storage result]} (contract {} {:caller caller})]
-              (result storage message))))
 
 (deftest disambiguate-functions-test
          (let [df disambiguate-functions]
               (is (= (df '(do)) '(lll-do)))
               (is (= (df '(for)) '(lll-for)))
-              (is (= (df '(do (for))) '(lll-do (lll-for))))))
+              (is (= (df '(do (for))) '(lll-do (lll-for))))
+              (is (= (df '69) 69))))
 
 (deftest expand-sstores-test
          (let [es expand-sstores]
@@ -57,13 +45,13 @@
                 {:result nil
                  :storage {69 "foo"
                            "favorite-color" "green"}}))
-         (is (= (test-transaction key-value-publisher
+         #_(is (= (test-transaction key-value-publisher
                                   "foo"
                                   {:caller "bar"
                                    :data ["favorite-color" "green"]})
                 {:result nil
                  :storage {69 "foo"}}))
-         (is (= (test-transaction key-value-publisher
+         #_(is (= (test-transaction key-value-publisher
                                   "foo"
                                   {:caller "foo"
                                    :data ["favorite-color" "green" "favorite-animal" "cat"]})
@@ -166,68 +154,68 @@
              ""))
 
 (deftest gav-coin-test
-          (is (= (test-init gav-coin "foo")
-                 {:transactions [{:gas -100, :to-address "name-registrar", :value 0, :send-location 0, :send-count 7, :return-location 0, :return-count 0}], :storage {"foo" 79228162514264337593543950336N}}))
-          (is (= (test-transaction gav-coin
-                                   "foo"
-                                   {:caller "bar"
-                                    :data [1]})
-                 {:storage {"foo" 79228162514264337593543950336N}})
-              "not enough data")
-          (is (= (test-transaction gav-coin
-                                   "foo"
-                                   {:caller "foo"
-                                    :data ["lisa" 100]})
-                  {:storage {"lisa" 100, "foo" 79228162514264337593543950236N}, :result nil})
-              "send money")
-          (is (= (test-transaction gav-coin
-                                   "foo"
-                                   {:caller "foo"
-                                    :data ["jim" 200]}
-                                   {"lisa" 100})
-                  {:storage {"lisa" 100}})
-              "not enough money"))
+         (is (= (test-init gav-coin "foo")
+                {:transactions [{:gas -100, :to-address "name-registrar", :value 0, :send-location 0, :send-count 7, :return-location 0, :return-count 0}], :storage {"foo" 79228162514264337593543950336N}}))
+         (is (= (test-transaction gav-coin
+                                  "foo"
+                                  {:caller "bar"
+                                   :data [1]})
+                {:storage {"foo" 79228162514264337593543950336N}})
+             "not enough data")
+         (is (= (test-transaction gav-coin
+                                  "foo"
+                                  {:caller "foo"
+                                   :data ["lisa" 100]})
+                {:storage {"lisa" 100, "foo" 79228162514264337593543950236N}, :result nil})
+             "send money")
+         (is (= (test-transaction gav-coin
+                                  "foo"
+                                  {:caller "foo"
+                                   :data ["jim" 200]}
+                                  {"lisa" 100})
+                {:storage {"lisa" 100}})
+             "not enough money"))
 
 (deftest time-vault-test
-          (is (= (test-init time-vault "foo")
-                 {:transactions [{:gas -100, :to-address "name-registrar", :value 0, :send-location 0, :send-count 9, :return-location 0, :return-count 0}], :storage {"waiting_period" 3600, "owner" "foo"}}))
-          (is (= (test-transaction time-vault 
-                                   "foo" 
-                                   {:caller "foo"
-                                    :data ["withdrawal"]}
-                                   {"waiting_period" 3600, "owner" "foo"}
-                                   [10000])
-                  {:storage {"withdrawal_start" 10000, "owner" "foo", "waiting_period" 3600}, :result nil})
-              "initiate withdrawal")
-          (is (= (test-transaction time-vault 
-                                   "foo" 
-                                   {:caller "bar"
-                                    :data ["withdrawal"]}
-                                   {"waiting_period" 3600, "owner" "foo"}
-                                   [10000])
-                  {:storage {"owner" "foo", "waiting_period" 3600}, :result nil})
-              "initiate withdrawal, wrong user")
-          (is (= (test-transaction time-vault 
-                                   "foo" 
-                                   {:caller "foo"
-                                    :data ["finalize"]}
-                                   {"waiting_period" 3600, "owner" "foo", "withdrawal_start" 10000}
-                                   [10010])
-                  {:storage {"withdrawal_start" 10000, "owner" "foo", "waiting_period" 3600} :result nil})
-              "finalized too early")
-          (is (= (test-transaction time-vault 
-                                   "foo" 
-                                   {:caller "foo"
-                                    :data ["finalize"]}
-                                   {"waiting_period" 3600, "owner" "foo", "withdrawal_start" 10000}
-                                   [18000])
-                  {:storage {"withdrawal_start" 10000, "owner" "foo", "waiting_period" 3600}, :suicide true})
-              "success")
-          (is (= (test-transaction time-vault 
-                                   "foo" 
-                                   {:caller "bar"
-                                    :data ["finalize"]}
-                                   {"waiting_period" 3600, "owner" "foo", "withdrawal_start" 10000}
-                                   [18000])
-                  {:storage {"withdrawal_start" 10000, "owner" "foo", "waiting_period" 3600}, :result nil})
-              "wrong finalizer"))
+         (is (= (test-init time-vault "foo")
+                {:transactions [{:gas -100, :to-address "name-registrar", :value 0, :send-location 0, :send-count 9, :return-location 0, :return-count 0}], :storage {"waiting_period" 3600, "owner" "foo"}}))
+         (is (= (test-transaction time-vault 
+                                  "foo" 
+                                  {:caller "foo"
+                                   :data ["withdrawal"]}
+                                  {"waiting_period" 3600, "owner" "foo"}
+                                  {:timestamp 10000})
+                {:storage {"withdrawal_start" 10000, "owner" "foo", "waiting_period" 3600}, :result nil})
+             "initiate withdrawal")
+         (is (= (test-transaction time-vault 
+                                  "foo" 
+                                  {:caller "bar"
+                                   :data ["withdrawal"]}
+                                  {"waiting_period" 3600, "owner" "foo"}
+                                  {:timestamp 10000})
+                {:storage {"owner" "foo", "waiting_period" 3600}, :result nil})
+             "initiate withdrawal, wrong user")
+         (is (= (test-transaction time-vault 
+                                  "foo" 
+                                  {:caller "foo"
+                                   :data ["finalize"]}
+                                  {"waiting_period" 3600, "owner" "foo", "withdrawal_start" 10000}
+                                  {:timestamp 10010})
+                {:storage {"withdrawal_start" 10000, "owner" "foo", "waiting_period" 3600} :result nil})
+             "finalized too early")
+         (is (= (test-transaction time-vault 
+                                  "foo" 
+                                  {:caller "foo"
+                                   :data ["finalize"]}
+                                  {"waiting_period" 3600, "owner" "foo", "withdrawal_start" 10000}
+                                  {:timestamp 18000})
+                {:storage {"withdrawal_start" 10000, "owner" "foo", "waiting_period" 3600}, :suicide true})
+             "success")
+         (is (= (test-transaction time-vault 
+                                  "foo" 
+                                  {:caller "bar"
+                                   :data ["finalize"]}
+                                  {"waiting_period" 3600, "owner" "foo", "withdrawal_start" 10000}
+                                  {:timestamp 18000})
+                {:storage {"withdrawal_start" 10000, "owner" "foo", "waiting_period" 3600}, :result nil})
+             "wrong finalizer"))
