@@ -191,9 +191,6 @@
 (defn balance []
       @*unsafe-balance*)
 
-(defn prevhash []
-      (throw (ex-info "not implemented" nil)))
-
 (defn coinbase []
       (throw (ex-info "not implemented" nil)))
 
@@ -203,8 +200,14 @@
 (defn timestamp []
       (:timestamp *unsafe-block*))
 
+(defn prevhash []
+      (:hash  *unsafe-block*))
+
 (defn difficulty []
       (throw (ex-info "not implemented" nil)))
 
 (defn gaslimit []
       (throw (ex-info "not implemented" nil)))
+
+(defn sha3 [n]
+      (hash n))

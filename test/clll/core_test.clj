@@ -22,9 +22,10 @@
               (is (= (em '(lll-do [i] 2)) '(lll-do (mstore i 2))))))
 
 (deftest expand-derefs-test
-         (let [ed expand-derefs]
+         `(let [ed expand-derefs]
               (is (= (ed '(lll-do @i)) '(lll-do (mload i))))
               (is (= (ed '(lll-do @@i)) '(lll-do (sload i))))
+              (is (= (ed '(lll-do @@(+ next-pod-stats @i))) '(lll-do (sload (+ next-pod-stats (mload i))))))
               (is (= (ed '(lll-do (sstore 69 5))) '(lll-do (sstore 69 5))))))
 
 (deftest defcontract-helper-test
@@ -170,10 +171,11 @@
              "send money")
          (is (= (test-transaction gav-coin
                                   "foo"
-                                  {:caller "foo"
+                                  {:caller "gerb"
                                    :data ["jim" 200]}
                                   {"lisa" 100})
-                {:storage {"lisa" 100}})
+                {:storage {"lisa" 100
+                           "foo" 79228162514264337593543950336N}})
              "not enough money"))
 
 (deftest time-vault-test

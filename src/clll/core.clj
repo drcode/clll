@@ -79,18 +79,18 @@
       (= x 'clojure.core/deref))
 
 (defn expand-derefs
-  "This function handles @i and @@i"
-  [exp]
-  (if (seq? exp)
-    (let [[command & params] exp
-          expand (fn [params]
-                   (map expand-derefs params))]
-      (if (deref? command)
-          (if (and (seq? (first params)) (deref? (first (first params))))
-              (list 'sload (second (first params)))
-              (list 'mload (first params)))
-          (cons command (expand params))))
-    exp))
+      "This function handles @i and @@i"
+      [exp]
+      (if (seq? exp)
+          (let [[command & params] exp
+                expand (fn [params]
+                           (map expand-derefs params))]
+               (if (deref? command)
+                   (if (and (seq? (first params)) (deref? (first (first params))))
+                       (list 'sload (expand-derefs (second (first params))))
+                       (list 'mload (expand-derefs (first params))))
+                   (cons command (expand params))))
+          exp))
 
 
 (defn defcontract-helper [body]
