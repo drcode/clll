@@ -19,4 +19,8 @@
          (let [{:keys [storage result]} (apply contract {} {:caller caller} more)
                fun (first result)
                storage (merge storage storage-override)]
-              (take 2 (diff {:storage storage} (apply fun storage message more))))))
+              (let [[old new] (diff {:storage storage} (apply fun storage message more))
+                    deleted (apply dissoc old (keys new))]
+                   (if (seq deleted)
+                       (assoc new :deletions deleted)
+                       new)))))

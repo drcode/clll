@@ -22,10 +22,13 @@
                                     (body)
                                     {:result nil}
                                     (catch clojure.lang.ExceptionInfo e#
-                                           (-> e# ex-data)))]
-                           (cond-> (assoc result :storage @*unsafe-storage-atom*)
-                                   (not (zero? @*unsafe-balance*)) (assoc :balance @*unsafe-balance*)
-                                   (seq @*unsafe-transactions*) (assoc :transactions @*unsafe-transactions*)))))
+                                           (-> e# ex-data)))
+                            result (cond-> (assoc result :storage @*unsafe-storage-atom*)
+                                           (not (zero? @*unsafe-balance*)) (assoc :balance @*unsafe-balance*)
+                                           (seq @*unsafe-transactions*) (assoc :transactions @*unsafe-transactions*))]
+                           (if (:result result)
+                               result
+                               (dissoc result :result)))))
           ([storage message block child-contracts]
              (fun storage message block child-contracts 0))
           ([storage message block]
