@@ -1,4 +1,4 @@
-(defproject clll "0.1.1"
+(defproject clll "0.1.2alpha"
             :description "Run Ethereum CLLL contracts directly in clojure"
             :url "https://github.com/drcode/clll"
 

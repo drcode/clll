@@ -63,7 +63,8 @@
 (defn mload [key]
       (or (@*unsafe-memory* key) (@*unsafe-memory* (coerce-integer key)) 0))
 
-(defn lll-do [& x])
+(defn lll-do [& x]
+      (last x))
 
 (defn calldatasize []
       (* (count (*unsafe-message* :data)) 32))
@@ -71,10 +72,15 @@
 (defn calldataload [i]
   ((:data *unsafe-message*) (in-bytes i)))
 
-(defn lll-dbg [x]
-  (println)
-  (println "dbg=" x)
-  x)
+(defn lll-dbg 
+      ([x]
+         (println)
+         (println "dbg=" x)
+         x)
+      ([nam x]
+         (println)
+         (println nam "=" x)
+         x))
 
 (defn address []
   "12345")
